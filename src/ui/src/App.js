@@ -9,9 +9,7 @@ function App() {
       <NavBar />
       <h2>Using AI for image recognition</h2>
       <div className="AppDescription">
-        You can upload an image and we will try to extract some useful
-        information. Could be useful to extract a VRM from an image, or to
-        identify other contents of an image.
+        You can try to upload an image of a car and we will extract some useful information using AI. 
       </div>
       <DragAndDropFile />
     </div>

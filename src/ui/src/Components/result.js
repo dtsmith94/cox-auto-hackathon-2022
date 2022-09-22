@@ -1,9 +1,9 @@
 var resultSuccess = {
-        description: "A car on the road.",
-        VRM: "GV28 EDF",
+        description: "Some TEST data, A car on the road..",
+        VRM: "GV28EDF",
         Brand: "Audi",
-        ImageProportion: "35",
-        ImageOrientation: "landscape?"
+        ReviewImageProportionOfCar: "35",
+        ReviewImageOrientation: "landscape"
 }
 
 export default resultSuccess;

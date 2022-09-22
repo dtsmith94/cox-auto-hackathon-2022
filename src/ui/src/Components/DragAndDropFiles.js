@@ -41,7 +41,7 @@ const DragAndDropFile = () => {
       />
       <p>
         {file && file[0].name
-          ? `File name: ${file[0].name}`
+          ? ''
           : "no files uploaded yet"}
       </p>
       {file && (
@@ -64,20 +64,20 @@ const DragAndDropFile = () => {
             className="text-center"
             style={{ width: "1000px", margin: "15px" }}
           >
-            <Card.Header>Description: {resultSuccess.description}</Card.Header>
+            <Card.Header>Description: <b>{resultSuccess.description}</b></Card.Header>
             <Card.Body>
               <Container>
                 <Row>
                   <Col></Col>
                 </Row>
                 <Row>
-                  <Col>{resultSuccess.VRM}</Col>
-                  <Col>{resultSuccess.Brand}</Col>
+                  <Col>VRN: <br /><b>{resultSuccess.VRM}</b></Col>
+                  <Col>Brand: <br /><b>{resultSuccess.Brand}</b></Col>
                   <Col>
-                    Image proportion of car: <br />{" "}
-                    {resultSuccess.ImageProportion}%
+                    Image Proportion Of Car: <br />{" "}
+                    <b>{resultSuccess.ReviewImageProportionOfCar}%</b>
                   </Col>
-                  <Col>Image orientation: {resultSuccess.ImageOrientation}</Col>
+                  <Col>Review Image Orientation: <br /><b>{resultSuccess.ReviewImageOrientation}</b></Col>
                 </Row>
               </Container>
             </Card.Body>
