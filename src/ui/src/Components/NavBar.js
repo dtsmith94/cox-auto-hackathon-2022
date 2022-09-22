@@ -9,9 +9,9 @@ const NavBar = () => {
         <Navbar.Brand href="#home">
             <img
               alt=""
-              src="../Cox-Automotive-Logo_2.png"
+              src={require('../images/cox-auto-logo.png')}
               width="auto"
-              height="31"
+              height="30"
               className="d-inline-block align-top"
             />{' '}
             Europe Hackathon '22
