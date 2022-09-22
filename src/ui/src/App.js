@@ -1,23 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import DragAndDropFile from "./Components/DragAndDropFiles";
+import NavBar from "./Components/NavBar";
+
+import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NavBar />
+      <h2>Using AI for image recognition</h2>
+      <div className="AppDescription">
+        You can upload an image and we will try to extract some useful
+        information. Could be useful to extract a VRM from an image, or to
+        identify other contents of an image.
+      </div>
+      <DragAndDropFile />
     </div>
   );
 }
