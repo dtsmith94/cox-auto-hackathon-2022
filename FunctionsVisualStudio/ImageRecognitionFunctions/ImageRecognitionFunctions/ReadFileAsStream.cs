@@ -11,6 +11,8 @@ using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using System.Threading;
 using Newtonsoft.Json;
+using ImageRecognitionFunctions.Services;
+using ImageRecognitionFunctions.Models;
 
 namespace ComputerVisionQuickstart
 {
@@ -19,9 +21,6 @@ namespace ComputerVisionQuickstart
         // Add your Computer Vision subscription key and endpoint
         static string subscriptionKey = "c6a994cd68c14b1ea68267c25c11c479";
         static string endpoint = "https://hackathon-22.cognitiveservices.azure.com/";
-
-        private const string READ_TEXT_URL_IMAGE = "https://m.atcdn.co.uk/a/media/w800h600/366601a04d4b4c3ea610d8496dc20aa2.jpg";
-
 
         [FunctionName("ReadFileAsStream")]
         public async Task<IActionResult> Run(
@@ -32,11 +31,19 @@ namespace ComputerVisionQuickstart
             var file = req.Form.Files["file"];
         
             ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
-            var response = await AnalyzeImage(client, file);
 
-            // var simpleResponse
+            // Read Image
+            var readImageService = new ReadImageService(client, file);
+            var readImageModel = await readImageService.ReadImageAsync();
 
-            return new OkObjectResult(response);
+            // Analyze Image
+            var analyzeImageService = new AnalyzeImageService(client, file);
+            var analyzeImageModel = await analyzeImageService.AnalyzeImageAsync();
+
+            // combine models into single view model to return in the response
+            var viewModel = new ImageRecognitionViewModel();
+
+            return new OkObjectResult(viewModel);
         }
 
         public static ComputerVisionClient Authenticate(string endpoint, string key)
@@ -47,47 +54,11 @@ namespace ComputerVisionQuickstart
             return client;
         }
 
-        private static async Task<OcrResult> ReadFileOcrUrl(ComputerVisionClient client, IFormFile file)
-        {
-            var results = await client.RecognizePrintedTextInStreamAsync(true, file.OpenReadStream());
+        //private static async Task<OcrResult> ReadFileOcrUrl(ComputerVisionClient client, IFormFile file)
+        //{
+        //    var results = await client.RecognizePrintedTextInStreamAsync(true, file.OpenReadStream());
 
-            return results;
-        }
-
-        private static async Task<ReadOperationResult> ReadFileUrl(ComputerVisionClient client, IFormFile file)
-        {
-            // Read text from URL
-            var textHeaders = await client.ReadInStreamAsync(file.OpenReadStream());
-            // After the request, get the operation location (operation ID)
-            string operationLocation = textHeaders.OperationLocation;
-
-            // Retrieve the URI where the extracted text will be stored from the Operation-Location header.
-            // We only need the ID and not the full URL
-            const int numberOfCharsInOperationId = 36;
-            string operationId = operationLocation.Substring(operationLocation.Length - numberOfCharsInOperationId);
-
-            // Extract the text
-            ReadOperationResult results;
-            do
-            {
-                results = await client.GetReadResultAsync(Guid.Parse(operationId));
-            }
-            while ((results.Status == OperationStatusCodes.Running ||
-                results.Status == OperationStatusCodes.NotStarted));
-
-            return results;
-        }
-
-        private static async Task<ImageAnalysis> AnalyzeImage(ComputerVisionClient client, IFormFile file)
-        {
-            var visualFeatures = new List<VisualFeatureTypes?>
-            {
-                VisualFeatureTypes.Brands, VisualFeatureTypes.Categories, VisualFeatureTypes.Color, VisualFeatureTypes.Description, VisualFeatureTypes.Objects
-            };
-
-            var results = await client.AnalyzeImageInStreamAsync(file.OpenReadStream(), visualFeatures);
-
-            return results;
-        }
+        //    return results;
+        //}
     }
 }
