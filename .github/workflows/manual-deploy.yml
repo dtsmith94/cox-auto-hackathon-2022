@@ -13,9 +13,18 @@ jobs:
   deploy:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Deploys the app
-    - name: Deploy App
-      run: cd src/ui; npm run deploy
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: cd src/ui
+      - run: npm run deploy
