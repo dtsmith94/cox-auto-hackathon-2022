@@ -26,5 +26,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - run: git config user.email "github-actions@example.com"; git config user.name "Github Actions"
       - run: cd src/ui; npm install
       - run: cd src/ui; npm run deploy
