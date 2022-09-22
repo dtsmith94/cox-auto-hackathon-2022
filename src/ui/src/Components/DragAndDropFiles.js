@@ -3,7 +3,7 @@ import { FileUploader } from "react-drag-drop-files";
 import axios from "axios";
 import { Button } from "react-bootstrap";
 
-const fileTypes = ["JPEG", "PNG"];
+const fileTypes = ["JPEG", "PNG", "JPG"];
 
 const DragAndDropFile = () => {
   const [file, setFile] = useState(null);

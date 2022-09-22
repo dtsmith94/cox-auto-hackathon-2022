@@ -1,0 +1,7 @@
+{
+    "vrm":"BD51 SMR",
+    "description": "A silver car in front of a field",
+    "brand": "Audi",
+    "imageProportionOfCar": 67, //Percentage
+    "imageOrientation": "Upright"
+}

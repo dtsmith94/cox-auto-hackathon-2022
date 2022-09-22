@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,10 @@ namespace ComputerVisionQuickstart
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
-            var formdata = await req.ReadFormAsync();
             var file = req.Form.Files["file"];
         
             ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
-            var response = await ReadFileUrl(client, file);
+            var response = await AnalyzeImage(client, file);
 
             // var simpleResponse
 
@@ -78,5 +78,16 @@ namespace ComputerVisionQuickstart
             return results;
         }
 
+        private static async Task<ImageAnalysis> AnalyzeImage(ComputerVisionClient client, IFormFile file)
+        {
+            var visualFeatures = new List<VisualFeatureTypes?>
+            {
+                VisualFeatureTypes.Brands, VisualFeatureTypes.Categories, VisualFeatureTypes.Color, VisualFeatureTypes.Description, VisualFeatureTypes.Objects
+            };
+
+            var results = await client.AnalyzeImageInStreamAsync(file.OpenReadStream(), visualFeatures);
+
+            return results;
+        }
     }
 }
