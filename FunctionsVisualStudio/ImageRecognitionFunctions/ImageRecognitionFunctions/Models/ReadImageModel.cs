@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ImageRecognitionFunctions.Models
 {
-    internal class AnalyzeImageModel
+    internal class ReadImageModel
     {
     }
 }
