@@ -9,7 +9,7 @@ const NavBar = () => {
         <Navbar.Brand href="#home">
             <img
               alt=""
-              src="../Cox-Automotive-Logo_2.png"
+              src="./Cox-Automotive-Logo_2.png"
               width="auto"
               height="31"
               className="d-inline-block align-top"
