@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { FileUploader } from "react-drag-drop-files";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Card, Row, Col, Container } from "react-bootstrap";
+import resultSuccess from "./result";
 
-const fileTypes = ["JPEG", "PNG"];
+const fileTypes = ["JPEG", "PNG", "JPG"];
 
 const DragAndDropFile = () => {
   const [file, setFile] = useState(null);
@@ -38,16 +39,61 @@ const DragAndDropFile = () => {
         name="file"
         types={fileTypes}
       />
-      <p>{file ? `File name: ${file[0].name}` : "no files uploaded yet"}</p>
-      {(file && !isLoading) && (
+      <p>
+        {file && file[0].name
+          ? `File name: ${file[0].name}`
+          : "no files uploaded yet"}
+      </p>
+      {file && (
+        <img
+          src={URL.createObjectURL(file[0])}
+          style={styles.image}
+          alt="Thumb"
+        />
+      )}
+      {file && !isLoading && !result && (
         <Button variant="primary" onClick={importFile}>
-          Upload
+          Let's try the AI
         </Button>
       )}
-      {isLoading && ('Loading...')}
-      {(result && !isLoading) && result}
+      {isLoading && "Loading..."}
+
+      {file && !isLoading && result && (
+        <>
+          <Card
+            className="text-center"
+            style={{ width: "1000px", margin: "15px" }}
+          >
+            <Card.Header>Description: {resultSuccess.description}</Card.Header>
+            <Card.Body>
+              <Container>
+                <Row>
+                  <Col></Col>
+                </Row>
+                <Row>
+                  <Col>{resultSuccess.VRM}</Col>
+                  <Col>{resultSuccess.Brand}</Col>
+                  <Col>
+                    Image proportion of car: <br />{" "}
+                    {resultSuccess.ImageProportion}%
+                  </Col>
+                  <Col>Image orientation: {resultSuccess.ImageOrientation}</Col>
+                </Row>
+              </Container>
+            </Card.Body>
+          </Card>
+
+          <Button variant="primary" onClick={importFile}>
+            Try again
+          </Button>
+        </>
+      )}
     </div>
   );
 };
 
 export default DragAndDropFile;
+
+const styles = {
+  image: { maxWidth: "100%", maxHeight: 320, paddingBottom: "15px" },
+};
