@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ImageRecognitionFunctions.Models
+﻿namespace ImageRecognitionFunctions.Models
 {
     internal class AnalyzeImageModel
     {
+        internal string Vrm { get; set; }
     }
 }

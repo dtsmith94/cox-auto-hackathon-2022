@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ImageRecognitionFunctions.Services
@@ -38,8 +40,27 @@ namespace ImageRecognitionFunctions.Services
             while ((results.Status == OperationStatusCodes.Running ||
                 results.Status == OperationStatusCodes.NotStarted));
 
-            // TODO: return the actual model
-            return new AnalyzeImageModel();
+            var vrm = ExtractVrm(results);
+
+            return new AnalyzeImageModel { Vrm = vrm };
+        }
+
+        private string ExtractVrm(ReadOperationResult results)
+        {
+            var lines = results.AnalyzeResult.ReadResults.SelectMany(readResult => readResult.Lines);
+
+            foreach (var line in lines)
+            {
+                var text = line.Text.Replace(" ", "").ToUpper();
+
+                var regex = new Regex(@"(^[A-Z]{2}[0-9]{2}\s?[A-Z]{3}$)|(^[A-Z][0-9]{1,3}[A-Z]{3}$)|(^[A-Z]{3}[0-9]{1,3}[A-Z]$)|(^[0-9]{1,4}[A-Z]{1,2}$)|(^[0-9]{1,3}[A-Z]{1,3}$)|(^[A-Z]{1,2}[0-9]{1,4}$)|(^[A-Z]{1,3}[0-9]{1,3}$)|(^[A-Z]{1,3}[0-9]{1,4}$)|(^[0-9]{3}[DX]{1}[0-9]{3}$)");
+                var match = regex.Match(text);
+
+                if (match.Success)
+                    return text;
+            }
+
+            return string.Empty;
         }
     }
 }

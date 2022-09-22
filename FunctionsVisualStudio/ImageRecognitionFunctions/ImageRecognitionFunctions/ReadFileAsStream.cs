@@ -41,7 +41,10 @@ namespace ComputerVisionQuickstart
             var analyzeImageModel = await analyzeImageService.AnalyzeImageAsync();
 
             // combine models into single view model to return in the response
-            var viewModel = new ImageRecognitionViewModel();
+            var viewModel = new ImageRecognitionViewModel
+            {
+                Vrm = readImageModel.Vrm
+            };
 
             return new OkObjectResult(viewModel);
         }
