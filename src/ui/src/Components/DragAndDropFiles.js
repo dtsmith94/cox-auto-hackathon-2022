@@ -19,7 +19,7 @@ const DragAndDropFile = () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        "https://localhost:44323/api/importfile",
+        "http://localhost:7071/api/ReadFileAsStream",
         formData
       );
       setResult(res);
