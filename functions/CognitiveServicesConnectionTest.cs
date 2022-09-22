@@ -7,11 +7,19 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace functions
 {
-    public static class CognitiveServicesConnectionTest
+    public class CognitiveServicesConnectionTest
     {
+        private readonly HttpClient _client;
+        
+        public CognitiveServicesConnectionTest(IHttpClientFactory httpClientFactory)
+        {
+            this._client = httpClientFactory.CreateClient();
+        }
+
         [FunctionName("CognitiveServicesConnectionTest")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -28,6 +36,8 @@ namespace functions
             string responseMessage = string.IsNullOrEmpty(name)
                 ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
                 : $"Hello, {name}. This HTTP triggered function executed successfully.";
+
+            var result = post
 
             return new OkObjectResult(responseMessage);
         }
