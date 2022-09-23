@@ -71,7 +71,7 @@ const DragAndDropFile = () => {
                   <Col></Col>
                 </Row>
                 <Row>
-                  <Col>VRN: <br /><b>{resultSuccess.VRM}</b></Col>
+                  <Col>VRM: <br /><b>{resultSuccess.VRM}</b></Col>
                   <Col>Brand: <br /><b>{resultSuccess.Brand}</b></Col>
                   <Col>
                     Image Proportion Of Car: <br />{" "}
