@@ -18,5 +18,11 @@ namespace ImageRecognitionFunctions.Models
 
         [JsonPropertyName("imageThumbnail")]
         public string ImageThumbnail { get; set; }
+
+        [JsonPropertyName("isVehicle")]
+        public bool? IsVehicle { get; set; }
+
+        [JsonPropertyName("unitType")]
+        public string UnitType { get; set; }
     }
 }

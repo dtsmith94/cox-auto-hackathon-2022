@@ -6,9 +6,9 @@
 
         internal string Description { get; set; }
 
-        internal bool IsImageOfVehicle { get; set; }
+        internal bool IsVehicle { get; set; }
 
-        internal bool UnitType { get; set; }
+        internal string UnitType { get; set; }
 
     }
 }

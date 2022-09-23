@@ -76,7 +76,9 @@ namespace ComputerVisionQuickstart
                 Vrm = readImageModel?.Vrm,
                 ImageThumbnail = thumbnailModel.Base64,
                 Description = analyzeImageModel?.Description,
-                Brand = analyzeImageModel?.Brand
+                Brand = analyzeImageModel?.Brand,
+                IsVehicle = analyzeImageModel?.IsVehicle,
+                UnitType = analyzeImageModel?.UnitType
             };
         }
     }
