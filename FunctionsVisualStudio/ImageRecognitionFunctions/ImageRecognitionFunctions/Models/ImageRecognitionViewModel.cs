@@ -15,5 +15,8 @@ namespace ImageRecognitionFunctions.Models
 
         [JsonPropertyName("imageProportionOfCar")]
         public int ImageProportionOfCar { get; set; }
+
+        [JsonPropertyName("imageThumbnail")]
+        public string ImageThumbnail { get; set; }
     }
 }
