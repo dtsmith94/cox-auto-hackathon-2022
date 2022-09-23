@@ -19,7 +19,7 @@ namespace ImageRecognitionFunctions.Services
         internal async Task<ThumbnailModel> GenerateThumbnailAsync(IFormFile file)
         {
 
-            var results = await _client.GenerateThumbnailInStreamAsync(300, 200, file.OpenReadStream(), true);
+            var results = await _client.GenerateThumbnailInStreamAsync(150, 150, file.OpenReadStream(), true);
 
             byte[] bytes;
             using (var memoryStream = new MemoryStream())
