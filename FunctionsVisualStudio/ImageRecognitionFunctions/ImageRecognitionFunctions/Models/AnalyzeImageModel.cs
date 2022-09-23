@@ -10,5 +10,7 @@
 
         internal string UnitType { get; set; }
 
+        internal int? ImageProportionOfVehicle { get; set; }
+
     }
 }

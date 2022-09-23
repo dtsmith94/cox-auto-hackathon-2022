@@ -78,7 +78,8 @@ namespace ComputerVisionQuickstart
                 Description = analyzeImageModel?.Description,
                 Brand = analyzeImageModel?.Brand,
                 IsVehicle = analyzeImageModel?.IsVehicle,
-                UnitType = analyzeImageModel?.UnitType
+                UnitType = analyzeImageModel?.UnitType,
+                ImageProportionOfVehicle = analyzeImageModel?.ImageProportionOfVehicle
             };
         }
     }

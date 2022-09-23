@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -34,7 +35,8 @@ namespace ImageRecognitionFunctions.Services
                 Brand = ti.ToTitleCase(results.Brands.FirstOrDefault()?.Name ?? string.Empty),
                 Description = results.Description.Captions.FirstOrDefault()?.Text,
                 IsVehicle = IsImageOfVehicle(results.Objects),
-                UnitType = ti.ToTitleCase(GetUnitType(results.Objects) ?? string.Empty)
+                UnitType = ti.ToTitleCase(GetUnitType(results.Objects) ?? string.Empty),
+                ImageProportionOfVehicle = CalculateVehicleProportionOfImage(results.Objects, results.Metadata)
             };
         }
 
@@ -58,7 +60,7 @@ namespace ImageRecognitionFunctions.Services
             return !hasInvalidObject && hasVehicleObject;
         }
 
-        private static string GetUnitType(IEnumerable<DetectedObject> objects)
+        private static DetectedObject GetRecognisedObject(IEnumerable<DetectedObject> objects)
         {
             // A caravan just returned with objects "land Vehicle"
             // A hgv just returned with objects "land Vehicle" though the description sees it as truck
@@ -73,9 +75,29 @@ namespace ImageRecognitionFunctions.Services
                     || x.ObjectProperty.ToLower() == "motorcycle"
                     || x.ObjectProperty.ToLower() == "bicycle");
 
-            return unitTypeObject?.ObjectProperty.ToLower() == "hatchback"
-                ? unitTypeObject.Parent.ObjectProperty
-                : unitTypeObject?.ObjectProperty;
+            return unitTypeObject;
+        }
+
+        private static string GetUnitType(IEnumerable<DetectedObject> objects)
+        {
+            var recognisedObject = GetRecognisedObject(objects);
+
+            return recognisedObject?.ObjectProperty.ToLower() == "hatchback"
+                ? recognisedObject.Parent.ObjectProperty
+                : recognisedObject?.ObjectProperty;
+        }
+
+        private static int? CalculateVehicleProportionOfImage(IEnumerable<DetectedObject> objects, ImageMetadata metadata)
+        {
+            var recognisedObject = GetRecognisedObject(objects);
+
+            decimal imageArea = metadata.Width * metadata.Height;
+            decimal objectArea = recognisedObject.Rectangle.W * recognisedObject.Rectangle.H;
+
+            decimal percentageOfImage = (objectArea / imageArea) * 100;
+
+            return (int)Math.Round(percentageOfImage, 0);
+
         }
     }
 }

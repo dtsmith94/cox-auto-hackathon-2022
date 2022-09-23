@@ -30,8 +30,8 @@ const DragAndDropFile = () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        // "https://functionappcoxhackathon2022.azurewebsites.net/api/ReadFileAsStream?code=ZdMJLR8ObiLhKln5mS8PoG9BZHMrqfMd-myhSa2rGzaUAzFuC1amZA==",
-        "http://localhost:7071/api/ReadFileAsStream",
+        "https://functionappcoxhackathon2022.azurewebsites.net/api/ReadFileAsStream?code=ZdMJLR8ObiLhKln5mS8PoG9BZHMrqfMd-myhSa2rGzaUAzFuC1amZA==",
+        // "http://localhost:7071/api/ReadFileAsStream",
         formData
       );
       setResult(res.data);
@@ -122,8 +122,8 @@ const DragAndDropFile = () => {
                   <Col>
                     Image Proportion Of Car: <br />{" "}
                     <b>
-                      {result.imageProportionOfCar
-                        ? result.imageProportionOfCar + "%"
+                      {result.imageProportionOfVehicle
+                        ? result.imageProportionOfVehicle + "%"
                         : "No propotion detected."}
                     </b>
                   </Col>
