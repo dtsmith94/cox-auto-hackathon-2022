@@ -20,7 +20,7 @@ const DragAndDropFile = () => {
     setIsLoading(true);
     try {
       const res = await axios.post(
-        "https://localhost:44323/api/importfile",
+        "https://functionappcoxhackathon2022.azurewebsites.net/api/ReadFileAsStream",
         formData
       );
       setResult(res);
