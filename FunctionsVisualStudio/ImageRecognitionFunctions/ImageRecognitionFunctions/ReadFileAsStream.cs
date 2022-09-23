@@ -64,7 +64,9 @@ namespace ComputerVisionQuickstart
             // combine models into single view model to return in the response
             return new ImageRecognitionViewModel
             {
-                Vrm = readImageModel?.Vrm
+                Vrm = readImageModel?.Vrm,
+                Description = analyzeImageModel?.Description,
+                Brand = analyzeImageModel?.Brand
             };
         }
     }
