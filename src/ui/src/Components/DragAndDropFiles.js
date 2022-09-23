@@ -143,7 +143,7 @@ const DragAndDropFile = () => {
             </Card.Body>
           </Card>
 
-          <Button variant="primary" onClick={importFile}>
+          <Button style={{backgroundColor:"#00528a", borderColor: "#00528a"}} onClick={importFile}>
             Try again
           </Button>
         </>
