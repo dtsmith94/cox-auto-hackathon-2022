@@ -74,7 +74,7 @@ namespace ComputerVisionQuickstart
             return new ImageRecognitionViewModel
             {
                 Vrm = readImageModel?.Vrm,
-                ImageThumbnail = thumbnailModel.Base64,
+                ImageThumbnail = thumbnailModel?.Base64,
                 Description = analyzeImageModel?.Description,
                 Brand = analyzeImageModel?.Brand,
                 IsVehicle = analyzeImageModel?.IsVehicle,
