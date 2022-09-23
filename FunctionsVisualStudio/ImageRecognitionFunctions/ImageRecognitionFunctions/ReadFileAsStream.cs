@@ -44,6 +44,7 @@ namespace ComputerVisionQuickstart
         {
             ReadImageModel readImageModel = null;
             AnalyzeImageModel analyzeImageModel = null;
+            ThumbnailModel thumbnailModel = null;
 
             try
             {
@@ -61,10 +62,19 @@ namespace ComputerVisionQuickstart
             }
             catch { }
 
+            try
+            {
+                // Generate Thumbnail Image
+                var generateThumbnailService = new GenerateThumbnailService(client);
+                thumbnailModel = await generateThumbnailService.GenerateThumbnailAsync(file);
+            }
+            catch { }
+
             // combine models into single view model to return in the response
             return new ImageRecognitionViewModel
             {
-                Vrm = readImageModel?.Vrm
+                Vrm = readImageModel?.Vrm,
+                ImageThumbnail = thumbnailModel.Base64
             };
         }
     }
