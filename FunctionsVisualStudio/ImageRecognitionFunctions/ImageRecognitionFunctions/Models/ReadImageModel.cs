@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace ImageRecognitionFunctions.Models
 {
     internal class ReadImageModel
     {
+        internal string Vrm { get; set; }
     }
 }

@@ -5,19 +5,15 @@ namespace ImageRecognitionFunctions.Models
     internal class ImageRecognitionViewModel
     {
         [JsonPropertyName("vrm")]
-        public string Vrm {  get; set; }
+        public string Vrm { get; set; }
 
         [JsonPropertyName("description")]
-        public string Description {  get; set; }
+        public string Description { get; set; }
 
         [JsonPropertyName("brand")]
-        public string Brand {  get; set; }
+        public string Brand { get; set; }
 
         [JsonPropertyName("imageProportionOfCar")]
-        public int ImageProportionOfCar {  get; set; }
-
-        [JsonPropertyName("imageOrientation")]
-        public string ImageOrientation {  get; set; }
-
+        public int ImageProportionOfCar { get; set; }
     }
 }

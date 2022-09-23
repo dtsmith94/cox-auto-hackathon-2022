@@ -1,18 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
-using System.Threading;
-using Newtonsoft.Json;
 using ImageRecognitionFunctions.Services;
 using ImageRecognitionFunctions.Models;
+using System;
 
 namespace ComputerVisionQuickstart
 {
@@ -29,27 +24,15 @@ namespace ComputerVisionQuickstart
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
             var file = req.Form.Files["file"];
-        
-            ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
 
-            // Read Image
-            var readImageService = new ReadImageService(client, file);
-            var readImageModel = await readImageService.ReadImageAsync();
+            var client = Authenticate(endpoint, subscriptionKey);
 
-            // Analyze Image
-            var analyzeImageService = new AnalyzeImageService(client, file);
-            var analyzeImageModel = await analyzeImageService.AnalyzeImageAsync();
+            var result = await RunProcesses(client, file);
 
-            // combine models into single view model to return in the response
-            var viewModel = new ImageRecognitionViewModel
-            {
-                Vrm = readImageModel.Vrm
-            };
-
-            return new OkObjectResult(viewModel);
+            return new OkObjectResult(result);
         }
 
-        public static ComputerVisionClient Authenticate(string endpoint, string key)
+        private static ComputerVisionClient Authenticate(string endpoint, string key)
         {
             ComputerVisionClient client =
               new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
@@ -57,11 +40,32 @@ namespace ComputerVisionQuickstart
             return client;
         }
 
-        //private static async Task<OcrResult> ReadFileOcrUrl(ComputerVisionClient client, IFormFile file)
-        //{
-        //    var results = await client.RecognizePrintedTextInStreamAsync(true, file.OpenReadStream());
+        private static async Task<ImageRecognitionViewModel> RunProcesses(ComputerVisionClient client, IFormFile file)
+        {
+            ReadImageModel readImageModel = null;
+            AnalyzeImageModel analyzeImageModel = null;
 
-        //    return results;
-        //}
+            try
+            {
+                // Read Image
+                var readImageService = new ReadImageService(client);
+                readImageModel = await readImageService.ReadImageAsync(file);
+            }
+            catch { }
+
+            try
+            {
+                // Analyze Image
+                var analyzeImageService = new AnalyzeImageService(client);
+                analyzeImageModel = await analyzeImageService.AnalyzeImageAsync(file);
+            }
+            catch { }
+
+            // combine models into single view model to return in the response
+            return new ImageRecognitionViewModel
+            {
+                Vrm = readImageModel?.Vrm
+            };
+        }
     }
 }

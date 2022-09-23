@@ -12,17 +12,15 @@ namespace ImageRecognitionFunctions.Services
     internal class ReadImageService
     {
         private readonly ComputerVisionClient _client;
-        private readonly IFormFile _file;
 
-        internal ReadImageService(ComputerVisionClient client, IFormFile file)
+        internal ReadImageService(ComputerVisionClient client)
         {
             _client = client;
-            _file = file;
         }
-        internal async Task<AnalyzeImageModel> ReadImageAsync()
+        internal async Task<ReadImageModel> ReadImageAsync(IFormFile file)
         {
             // Read text from URL
-            var textHeaders = await _client.ReadInStreamAsync(_file.OpenReadStream());
+            var textHeaders = await _client.ReadInStreamAsync(file.OpenReadStream());
             // After the request, get the operation location (operation ID)
             string operationLocation = textHeaders.OperationLocation;
 
@@ -42,7 +40,7 @@ namespace ImageRecognitionFunctions.Services
 
             var vrm = ExtractVrm(results);
 
-            return new AnalyzeImageModel { Vrm = vrm };
+            return new ReadImageModel { Vrm = vrm };
         }
 
         private string ExtractVrm(ReadOperationResult results)
