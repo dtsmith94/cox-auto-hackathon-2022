@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ImageRecognitionFunctions": {
+      "commandName": "Project",
+      "commandLineArgs": "--cors *"
+    }
+  }
+}

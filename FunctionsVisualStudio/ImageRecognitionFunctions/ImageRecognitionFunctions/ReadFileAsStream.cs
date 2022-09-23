@@ -1,16 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
-using System.Threading;
-using Newtonsoft.Json;
+using ImageRecognitionFunctions.Services;
+using ImageRecognitionFunctions.Models;
+using System;
 
 namespace ComputerVisionQuickstart
 {
@@ -20,9 +17,6 @@ namespace ComputerVisionQuickstart
         static string subscriptionKey = "c6a994cd68c14b1ea68267c25c11c479";
         static string endpoint = "https://hackathon-22.cognitiveservices.azure.com/";
 
-        private const string READ_TEXT_URL_IMAGE = "https://m.atcdn.co.uk/a/media/w800h600/366601a04d4b4c3ea610d8496dc20aa2.jpg";
-
-
         [FunctionName("ReadFileAsStream")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
@@ -30,16 +24,15 @@ namespace ComputerVisionQuickstart
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
             var file = req.Form.Files["file"];
-        
-            ComputerVisionClient client = Authenticate(endpoint, subscriptionKey);
-            var response = await AnalyzeImage(client, file);
 
-            // var simpleResponse
+            var client = Authenticate(endpoint, subscriptionKey);
 
-            return new OkObjectResult(response);
+            var result = await RunProcesses(client, file);
+
+            return new OkObjectResult(result);
         }
 
-        public static ComputerVisionClient Authenticate(string endpoint, string key)
+        private static ComputerVisionClient Authenticate(string endpoint, string key)
         {
             ComputerVisionClient client =
               new ComputerVisionClient(new ApiKeyServiceClientCredentials(key))
@@ -47,47 +40,32 @@ namespace ComputerVisionQuickstart
             return client;
         }
 
-        private static async Task<OcrResult> ReadFileOcrUrl(ComputerVisionClient client, IFormFile file)
+        private static async Task<ImageRecognitionViewModel> RunProcesses(ComputerVisionClient client, IFormFile file)
         {
-            var results = await client.RecognizePrintedTextInStreamAsync(true, file.OpenReadStream());
+            ReadImageModel readImageModel = null;
+            AnalyzeImageModel analyzeImageModel = null;
 
-            return results;
-        }
-
-        private static async Task<ReadOperationResult> ReadFileUrl(ComputerVisionClient client, IFormFile file)
-        {
-            // Read text from URL
-            var textHeaders = await client.ReadInStreamAsync(file.OpenReadStream());
-            // After the request, get the operation location (operation ID)
-            string operationLocation = textHeaders.OperationLocation;
-
-            // Retrieve the URI where the extracted text will be stored from the Operation-Location header.
-            // We only need the ID and not the full URL
-            const int numberOfCharsInOperationId = 36;
-            string operationId = operationLocation.Substring(operationLocation.Length - numberOfCharsInOperationId);
-
-            // Extract the text
-            ReadOperationResult results;
-            do
+            try
             {
-                results = await client.GetReadResultAsync(Guid.Parse(operationId));
+                // Read Image
+                var readImageService = new ReadImageService(client);
+                readImageModel = await readImageService.ReadImageAsync(file);
             }
-            while ((results.Status == OperationStatusCodes.Running ||
-                results.Status == OperationStatusCodes.NotStarted));
+            catch { }
 
-            return results;
-        }
-
-        private static async Task<ImageAnalysis> AnalyzeImage(ComputerVisionClient client, IFormFile file)
-        {
-            var visualFeatures = new List<VisualFeatureTypes?>
+            try
             {
-                VisualFeatureTypes.Brands, VisualFeatureTypes.Categories, VisualFeatureTypes.Color, VisualFeatureTypes.Description, VisualFeatureTypes.Objects
+                // Analyze Image
+                var analyzeImageService = new AnalyzeImageService(client);
+                analyzeImageModel = await analyzeImageService.AnalyzeImageAsync(file);
+            }
+            catch { }
+
+            // combine models into single view model to return in the response
+            return new ImageRecognitionViewModel
+            {
+                Vrm = readImageModel?.Vrm
             };
-
-            var results = await client.AnalyzeImageInStreamAsync(file.OpenReadStream(), visualFeatures);
-
-            return results;
         }
     }
 }
